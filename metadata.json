@@ -1,0 +1,6 @@
+{
+  "name": "Gurumantra Educational Consultancy",
+  "description": "Study abroad consultancy platform for Nepali students exploring destinations, scholarships, test preparation, and admissions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
