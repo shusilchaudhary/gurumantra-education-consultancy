@@ -1,13 +1,13 @@
 "use client";
-import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight, GraduationCap, Globe, Users, CheckCircle,
   Star, ChevronRight, BookOpen, FileCheck, School, Award, Plane,
-  Phone, MapPin, Clock, ChevronDown, Shield,
+  Phone, MapPin, Clock, Shield,
 } from "lucide-react";
 import { testimonials, services, blogPosts } from "@/data/content";
 import CountryFlag, { type CountryCode } from "@/components/ui/country-flag";
+import ConsultationForm from "@/components/forms/consultation-form";
 
 /* ── Images ── */
 const BLOG_IMAGES: Record<string, string> = {
@@ -63,69 +63,6 @@ const STEPS = [
 const ICON_MAP: Record<string, React.ElementType> = {
   GraduationCap, BookOpen, FileCheck, School, Award, Plane,
 };
-
-const INPUT: React.CSSProperties = {
-  width: "100%", padding: "0.65rem 1rem", borderRadius: "0.75rem",
-  border: "1px solid var(--border)", background: "var(--background)",
-  color: "var(--foreground)", fontSize: "0.875rem", outline: "none",
-  boxSizing: "border-box",
-};
-
-/* ── Consultation form (client component stays inside "use client" page) ── */
-function ConsultationForm() {
-  const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", destination: "", message: "" });
-
-  if (submitted) {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "3rem 0", textAlign: "center" }}>
-        <div style={{ width: 56, height: 56, borderRadius: "50%", background: "#dcfce7", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem" }}>
-          <CheckCircle style={{ width: 28, height: 28, color: "#16a34a" }} />
-        </div>
-        <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--foreground)", marginBottom: "0.5rem" }}>Thank You!</h3>
-        <p style={{ fontSize: "0.875rem", color: "var(--muted-foreground)", maxWidth: "28ch" }}>Our counselor will contact you within 24 hours.</p>
-      </div>
-    );
-  }
-
-  return (
-    <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-row">
-        <div>
-          <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)", marginBottom: "0.375rem" }}>Full Name *</label>
-          <input required type="text" placeholder="Your full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={INPUT} />
-        </div>
-        <div>
-          <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)", marginBottom: "0.375rem" }}>Email Address *</label>
-          <input required type="email" placeholder="you@email.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={INPUT} />
-        </div>
-      </div>
-      <div>
-        <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)", marginBottom: "0.375rem" }}>Phone Number *</label>
-        <input required type="tel" placeholder="+977 98XXXXXXXX" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} style={INPUT} />
-      </div>
-      <div>
-        <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)", marginBottom: "0.375rem" }}>Preferred Destination</label>
-        <div style={{ position: "relative" }}>
-          <select value={form.destination} onChange={(e) => setForm({ ...form, destination: e.target.value })} style={{ ...INPUT, appearance: "none" as const }}>
-            <option value="">Select destination...</option>
-            {destinations.map((d) => <option key={d.slug} value={d.name}>{d.name}</option>)}
-            <option value="Not decided">Not decided yet</option>
-          </select>
-          <ChevronDown style={{ position: "absolute", right: "0.75rem", top: "50%", transform: "translateY(-50%)", width: 15, height: 15, color: "var(--muted-foreground)", pointerEvents: "none" }} />
-        </div>
-      </div>
-      <div>
-        <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)", marginBottom: "0.375rem" }}>Your Message</label>
-        <textarea rows={3} placeholder="Tell us about your goals, qualifications, budget..." value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} style={{ ...INPUT, resize: "none" }} />
-      </div>
-      <button type="submit" style={{ width: "100%", padding: "0.9rem", borderRadius: "0.875rem", background: "var(--primary)", color: "#fff", fontWeight: 700, fontSize: "0.9rem", border: "none", cursor: "pointer", boxShadow: "0 4px 16px rgba(21,101,192,0.30)" }}>
-        Get Free Consultation →
-      </button>
-      <p style={{ fontSize: "0.75rem", color: "var(--muted-foreground)", textAlign: "center" }}>100% free. No obligation. We respond within 24 hours.</p>
-    </form>
-  );
-}
 
 /* ── Page ── */
 export default function HomePage() {

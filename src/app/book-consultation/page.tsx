@@ -1,19 +1,7 @@
 "use client";
-import { useState } from "react";
 import Link from "next/link";
-import type { Metadata } from "next";
-import { Phone, Mail, MapPin, Clock, CheckCircle, ArrowRight, ChevronDown } from "lucide-react";
-
-const destinations = [
-  { slug: "south-korea",   name: "South Korea",     flag: "🇰🇷" },
-  { slug: "australia",   name: "Australia",      flag: "🇦🇺" },
-  { slug: "canada",      name: "Canada",          flag: "🇨🇦" },
-  { slug: "uk",          name: "United Kingdom",  flag: "🇬🇧" },
-  { slug: "usa",         name: "United States",   flag: "🇺🇸" },
-  { slug: "new-zealand", name: "New Zealand",     flag: "🇳🇿" },
-  { slug: "germany",     name: "Germany",         flag: "🇩🇪" },
-  { slug: "japan",       name: "Japan",           flag: "🇯🇵" },
-];
+import { Phone, Mail, MapPin, Clock, CheckCircle, ArrowRight } from "lucide-react";
+import ConsultationForm from "@/components/forms/consultation-form";
 
 const TRUST_POINTS = [
   "98% visa success rate",
@@ -29,70 +17,6 @@ const CONTACT = [
   { icon: MapPin, label: "Office", value: "Chabahil Central Complex, 3rd Floor, Kathmandu",  href: "https://maps.google.com" },
   { icon: Clock,  label: "Hours",  value: "Sun–Fri  10 AM – 5 PM",                           href: undefined },
 ];
-
-const INPUT: React.CSSProperties = {
-  width: "100%", padding: "0.7rem 1rem", borderRadius: "0.75rem",
-  border: "1px solid var(--border)", background: "var(--background)",
-  color: "var(--foreground)", fontSize: "0.875rem", outline: "none",
-  boxSizing: "border-box",
-};
-
-function ConsultationForm() {
-  const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", destination: "", message: "" });
-
-  if (submitted) {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "3.5rem 0", textAlign: "center" }}>
-        <div style={{ width: 60, height: 60, borderRadius: "50%", background: "#dcfce7", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.25rem" }}>
-          <CheckCircle style={{ width: 30, height: 30, color: "#16a34a" }} />
-        </div>
-        <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--foreground)", marginBottom: "0.5rem" }}>Thank You!</h3>
-        <p style={{ fontSize: "0.9rem", color: "var(--muted-foreground)", maxWidth: "30ch", lineHeight: 1.6 }}>Our counselor will contact you within 24 hours.</p>
-      </div>
-    );
-  }
-
-  return (
-    <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-2col">
-        <div>
-          <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)", marginBottom: "0.375rem" }}>Full Name *</label>
-          <input required type="text" placeholder="Your full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={INPUT} />
-        </div>
-        <div>
-          <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)", marginBottom: "0.375rem" }}>Email Address *</label>
-          <input required type="email" placeholder="you@email.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={INPUT} />
-        </div>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-2col">
-        <div>
-          <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)", marginBottom: "0.375rem" }}>Phone Number *</label>
-          <input required type="tel" placeholder="+977 98XXXXXXXX" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} style={INPUT} />
-        </div>
-        <div>
-          <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)", marginBottom: "0.375rem" }}>Preferred Destination</label>
-          <div style={{ position: "relative" }}>
-            <select value={form.destination} onChange={(e) => setForm({ ...form, destination: e.target.value })} style={{ ...INPUT, appearance: "none" as const }}>
-              <option value="">Select destination…</option>
-              {destinations.map((d) => <option key={d.slug} value={d.name}>{d.flag} {d.name}</option>)}
-              <option value="Not decided">Not decided yet</option>
-            </select>
-            <ChevronDown style={{ position: "absolute", right: "0.75rem", top: "50%", transform: "translateY(-50%)", width: 15, height: 15, color: "var(--muted-foreground)", pointerEvents: "none" }} />
-          </div>
-        </div>
-      </div>
-      <div>
-        <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)", marginBottom: "0.375rem" }}>Your Message</label>
-        <textarea rows={4} placeholder="Tell us about your goals, qualifications, preferred budget…" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} style={{ ...INPUT, resize: "none" }} />
-      </div>
-      <button type="submit" style={{ width: "100%", padding: "0.95rem", borderRadius: "0.875rem", background: "var(--primary)", color: "#fff", fontWeight: 700, fontSize: "0.95rem", border: "none", cursor: "pointer", boxShadow: "0 4px 16px rgba(21,101,192,0.30)" }}>
-        Get Free Consultation →
-      </button>
-      <p style={{ fontSize: "0.75rem", color: "var(--muted-foreground)", textAlign: "center" }}>100% free. No obligation. We respond within 24 hours.</p>
-    </form>
-  );
-}
 
 export default function BookConsultationPage() {
   return (
@@ -130,7 +54,7 @@ export default function BookConsultationPage() {
               <div style={{ padding: "2rem" }}>
                 <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--foreground)", marginBottom: "0.375rem" }}>Tell Us About Your Goals</h2>
                 <p style={{ fontSize: "0.85rem", color: "var(--muted-foreground)", marginBottom: "1.75rem" }}>Fill in the form below and our counselor will call you within 24 hours.</p>
-                <ConsultationForm />
+                <ConsultationForm variant="booking" />
               </div>
             </div>
 
