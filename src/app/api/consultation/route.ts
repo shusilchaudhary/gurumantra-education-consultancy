@@ -3,7 +3,34 @@ import { Resend } from "resend";
 import { z } from "zod";
 
 const PUBLIC_CONTACT_EMAIL = "gurumantraconsultancy39@gmail.com";
-const RESEND_DEFAULT_EMAIL = "shusilchy2024@gmail.com";
+const RESEND_DEFAULT_EMAIL = "gurumantraconsultancy39@gmail.com";
+const DEFAULT_RESEND_FROM = "Gurumantra Website <onboarding@resend.dev>";
+
+function resolveResendFromAddress(): string {
+  const configured = process.env.RESEND_FROM_EMAIL?.trim();
+  if (!configured) return DEFAULT_RESEND_FROM;
+  if (/@(gmail|yahoo|hotmail|outlook|live)\./i.test(configured)) {
+    return DEFAULT_RESEND_FROM;
+  }
+  return configured;
+}
+
+function formatResendError(error: { name?: string; statusCode?: number | null; message?: string }): string {
+  const msg = error.message || "";
+  if (/only send testing emails to your own email address/i.test(msg)) {
+    return "Resend sandbox only allows sending to your Resend account email (gurumantraconsultancy39@gmail.com) unless a custom domain is verified. Please check RESEND_TO_EMAIL or call 9808531098.";
+  }
+  if (error.name === "invalid_api_key" || error.statusCode === 401 || /api key/i.test(msg)) {
+    return "Resend API key was rejected as invalid. Please check RESEND_API_KEY in Secrets or call 9808531098.";
+  }
+  if (/not verified|domain/i.test(msg)) {
+    return "Sender domain is not verified in Resend. Leave RESEND_FROM_EMAIL unset (uses onboarding@resend.dev) or verify your domain, or call 9808531098.";
+  }
+  if (error.statusCode === 429 || /rate limit|quota/i.test(msg)) {
+    return "Email sending limit reached temporarily. Please wait a moment and try again, or call 9808531098.";
+  }
+  return "Unable to send email right now. Please try again or call 9808531098.";
+}
 
 const requestSchema = z.object({
   name: z.string().trim().min(2, "Please enter your full name.").max(100),
@@ -125,7 +152,7 @@ export async function POST(req: NextRequest) {
 
     try {
       const { error } = await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL?.trim() || "Gurumantra Website <onboarding@resend.dev>",
+        from: resolveResendFromAddress(),
         to: recipients,
         replyTo: cleanEmail,
         subject,
@@ -134,9 +161,9 @@ export async function POST(req: NextRequest) {
       });
 
       if (error) {
-        console.error("[Consultation API] Resend SDK error:", error.message);
+        console.error("[Consultation API] Resend SDK error:", error.name, error.statusCode, error.message);
         return NextResponse.json(
-          { error: "Unable to send email right now. Please try again or call 9808531098." },
+          { error: formatResendError(error) },
           { status: 502 }
         );
       }
